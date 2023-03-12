@@ -11,7 +11,6 @@ import spring.security.dto.member.MemberResponseDto;
 import spring.security.dto.sign.TokenDto;
 import spring.security.dto.sign.TokenRequestDto;
 import spring.security.service.auth.AuthService;
-import spring.security.service.member.MemberService;
 
 @RestController
 @RequestMapping("/auth")
