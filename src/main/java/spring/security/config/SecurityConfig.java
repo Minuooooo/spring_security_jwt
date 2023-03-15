@@ -24,6 +24,11 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/api-docs/**",
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -32,9 +37,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
-        http.csrf().disable()
+        http.csrf().disable().cors().disable()
 
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .shouldFilterAllDispatcherTypes(false)
+                        .requestMatchers(AUTH_WHITELIST)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
 
                 // exception handling 할 때 우리가 만든 클래스를 추가
                 .exceptionHandling()
@@ -52,11 +62,11 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated() // 나머지 API 는 전부 인증 필요
+//                // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
+//                .and()
+//                .authorizeHttpRequests()
+//                .requestMatchers("/api/**").permitAll()
+//                .anyRequest().authenticated() // 나머지 API 는 전부 인증 필요
 
                 // jwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()

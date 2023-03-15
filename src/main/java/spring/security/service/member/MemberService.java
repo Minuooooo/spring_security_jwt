@@ -3,7 +3,6 @@ package spring.security.service.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spring.security.domain.member.Member;
 import spring.security.dto.member.MemberResponseDto;
 import spring.security.repository.member.MemberRepository;
 
