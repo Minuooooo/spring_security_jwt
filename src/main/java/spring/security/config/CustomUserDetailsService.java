@@ -1,4 +1,4 @@
-package spring.security.service.auth;
+package spring.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

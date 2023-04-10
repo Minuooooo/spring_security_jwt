@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  mysqldb:
+    image: mysql:8.0.32
+    restart: always
+    env_file: ./.env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - ${MYSQL_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
+
+  app:
+    depends_on:
+      - mysqldb
+    build: build/libs
+    restart: always
+    env_file: ./.env
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "${SPRING_DATASOURCE_URL}",
+        "spring.datasource.username": "${SPRING_DATASOURCE_USERNAME}",
+        "spring.datasource.password": "${SPRING_DATASOURCE_PASSWORD}"
+      }'
+    ports:
+      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+    stdin_open: true
+    tty: true

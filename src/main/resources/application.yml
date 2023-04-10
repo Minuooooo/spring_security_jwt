@@ -1,36 +1,23 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+server:
+  port: ${SERVER_PORT}
 
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-    defer-datasource-initialization: true
+spring:
+  profiles:
+    active: dev
 
 logging:
   level:
     spring.security: DEBUG #로깅 레벨 설정
 
-jwt:
-  header: Authorization
-  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-
 springdoc:
   packages-to-scan : spring.security
   swagger-ui :
-    path : /swagger-ui.html # html 문서 접속 경로
+    path :  ${SPRINGDOC_SWAGGER_PATH} # html 문서 접속 경로
     tags-sorter : alpha # 태그 정렬 기준
     operations-sorter : alpha # alpha (알파벳 오름차순), method (HTTP 메소드 순)
     doc-expansion: none # tag, operation 펼치는 방식
   api-docs :
-    path : /api-docs/json
+    path : ${SPRINGDOC_API_PATH}
     groups :
       enabled : true
   cache :

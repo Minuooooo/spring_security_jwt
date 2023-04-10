@@ -3,6 +3,7 @@ package spring.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import spring.security.jwt.TokenProvider;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -27,6 +29,7 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/swagger-ui/**",
             "/api-docs/**",
+            "/api/**"
     };
 
     @Bean
@@ -70,7 +73,7 @@ public class SecurityConfig {
 
                 // jwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
 
         return http.build();
     }
